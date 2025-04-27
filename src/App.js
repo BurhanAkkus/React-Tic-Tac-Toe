@@ -45,11 +45,10 @@ function Board({ xIsNext, squares, onPlay }){
   if(gameIsOver(squares)){
     return <h1>CONGRATULATIONS! {!xIsNext? 'X' :'O'} HAS WON THE GAME</h1>
   }
+  const rows = [1,2,3].map((index,_) => <DrawRow key={index} squares={squares.slice( (index-1) * 3, index * 3)} onClicks={clickHandlers.slice((index-1) * 3, index * 3)}/>)
   return(
     <>
-    <DrawRow squares={squares.slice(0, 3)} onClicks={clickHandlers.slice(0,3)}/>
-    <DrawRow squares={squares.slice(3, 6)} onClicks={clickHandlers.slice(3,6)}/>
-    <DrawRow squares={squares.slice(6, 9)} onClicks={clickHandlers.slice(6,9)}/>
+    {rows}
     </>
   );
 }
@@ -72,10 +71,11 @@ export default function Game() {
     } else {
       description = 'Go to game start';
     }
-    return (
-      <li key = {move}>
-        <button onClick={() => jumpTo(move)}>{description}</button>
-      </li>
+    return (<li key={move}>
+      {move === currentMove
+        ? <span>You are at move #{move}</span>
+        : <button onClick={() => jumpTo(move)}>{description}</button>}
+    </li>
     );
   });
   function jumpTo(nextMove) {
